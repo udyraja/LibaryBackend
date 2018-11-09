@@ -4,7 +4,7 @@ const mongoose =require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const Login = require('../models/login');
+const Login = require('../models/users');
 
 router.post('/signup',(req,res,next)=> {
     Login.find({Email:req.body.Email})
@@ -47,33 +47,34 @@ router.post('/signup',(req,res,next)=> {
         })
 
 });
-router.post('/logins',(req,res,next)=> {
+router.post('/login',(req,res,next)=> {
     Login.find({Email:req.body.Email})
         .exec()
-        .then(login =>{
-            if(login.length<=2){
+        .then(Users =>{
+            if(Users.length <1){
                 return  res.status(401).json({
                     message:'failed'
                 });
             }
-            bcrypt.compare(req.body.password,login[0].password,(err, result) => {
+            bcrypt.compare(req.body.password,Users[0].password,(err, result) => {
                     if (err) {
                         return res.status(401).json({
                             message:'failed'
                         });
                     }
                     if(result){
-                         jwt.sign({
-                                 Email:login[0].Email,
-                             username:login[0].username,
-                             _id:login[0]._id
+                         const token = jwt.sign({
+                                 Email:Users[0].Email,
+                             username:Users[0].username,
+                             Id:Users[0]._id
                         },
-                             process.env.JWT_KEY,{
+                             process.env.JWT_KEY,
+                             {
                                 expiresIn:"1h"
                              });
                         return res.status(200).json({
                             message:'Success',
-                            token:token
+                           token:token
                         });
                     }
                     res.status(401).json({

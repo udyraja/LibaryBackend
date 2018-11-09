@@ -12,15 +12,15 @@
     "http-errors": "^1.7.1",
     "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.3.7",
-    "morgan": "^1.9.1",
-    "nodemon": "^1.18.5"
+    "morgan": "^1.9.1"
   },
-  "env":{
-    "JWT_KEY":"secret"
+
+  "devDependencies": {
+    "nodemon": "^1.18.6"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
   },
   "author": "Udara Rajamanthri",
   "license": "ISC"
