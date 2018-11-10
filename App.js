@@ -8,6 +8,7 @@ const morgan = require('morgan');
 const userRoutes= require('./backend/routes/users');
 const projectRoutes= require('./backend/routes/projects');
 const loginRoutes= require('./backend/routes/login');
+const resourceRoutes= require('./backend/routes/resourceMaterials');
 
 mongoose.connect('mongodb://localhost/ProjectManagementSERVER');
 mongoose.Promise = global.Promise;
@@ -32,6 +33,7 @@ app.use((req,res,next)=>{
 app.use('/users',userRoutes);
 app.use('/projects',projectRoutes);
 app.use('/login',loginRoutes);
+app.use('/resources',resourceRoutes);
 
 app.use((req,res,next)=>{
     const error =new Error('Not Found');

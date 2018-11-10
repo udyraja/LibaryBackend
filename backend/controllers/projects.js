@@ -4,7 +4,7 @@ const Projects = require('../models/projects');
 const User =require('../models/users');
 
 
-exports.projects_gell_all=(req,res,next) => {
+exports.projects_get_all=(req,res,next) => {
     Projects.find()
         .select('user projectName Objectives ResourceMaterials TimeAllocation _id')
         .populate('user','name')
