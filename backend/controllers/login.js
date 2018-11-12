@@ -64,14 +64,11 @@ exports.login_login=(req,res,next)=> {
                 }
                 if (result) {
                     const token = jwt.sign({
+                            exp: Math.floor(Date.now() / 1000) + (60 * 60),
                             Email: Users[0].Email,
                             username: Users[0].username,
                             Id: Users[0]._id
-                        },
-                        process.env.JWT_KEY,
-                        {
-                            expiresIn: "1h"
-                        });
+                        },'secret');
                     return res.status(200).json({
                         message: 'Success',
                         token: token
