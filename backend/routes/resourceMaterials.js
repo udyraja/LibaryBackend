@@ -9,7 +9,7 @@ router.get('/:resourceId',ResourceController.resource_detail);
 
 router.post('/',ResourceController.resource_create_post);
 
-router.delete('/:resourceId',ResourceController.projects_delete);
+router.delete('/:resourceId',ResourceController.resource_delete_post);
 
 
 module.exports =router;

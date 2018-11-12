@@ -84,7 +84,7 @@ exports.resource_create_post = (req, res,next) => {
             console.log(result);
             res.status(201).json({
                 message: 'Resource is Stored',
-                CreatedProject: {
+                CreatedResource: {
                     _id: result._id,
                     project: result.project,
                     type: result.type,

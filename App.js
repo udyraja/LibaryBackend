@@ -9,6 +9,7 @@ const userRoutes= require('./backend/routes/users');
 const projectRoutes= require('./backend/routes/projects');
 const loginRoutes= require('./backend/routes/login');
 const resourceRoutes= require('./backend/routes/resourceMaterials');
+const objectiveRoutes =require('./backend/routes/objectives');
 
 mongoose.connect('mongodb://localhost/ProjectManagementSERVER');
 mongoose.Promise = global.Promise;
@@ -34,6 +35,7 @@ app.use('/users',userRoutes);
 app.use('/projects',projectRoutes);
 app.use('/login',loginRoutes);
 app.use('/resources',resourceRoutes);
+app.use('/objectives',objectiveRoutes);
 
 app.use((req,res,next)=>{
     const error =new Error('Not Found');
