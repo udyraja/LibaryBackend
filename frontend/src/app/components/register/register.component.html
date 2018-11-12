@@ -19,3 +19,9 @@
     <button type="submit" class="btn btn-primary">Submit</button>
   </fieldset>
 </form>
+<div class="Success" *ngIf="showSuccessMessage">
+Saved Successfully
+</div>
+<div class="Success" *ngIf="serverErrorMessage">
+  {{serverErrorMessage}}
+</div>

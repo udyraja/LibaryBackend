@@ -24,18 +24,19 @@ export class RegisterComponent implements OnInit {
 
   registerData(form:NgForm) {
 
-    const user = {
+    const users = {
       username: this.username,
       email: this.email,
       password: this.password
 
 
     };
-    this.authService.registerUser(user).subscribe(
+    this.authService.registerUser(form.value).subscribe(
       res=>{
         console.log(res);
         this.showSuccessMessage= true;
         setTimeout(()=>this.showSuccessMessage=false,4000);
+       // this.resetForm(form);
       },
       err=>{
         if(err.status=402) {
@@ -48,4 +49,14 @@ export class RegisterComponent implements OnInit {
     );
 
   }
+
+ /* resetForm(form:NgForm){
+    this.authService.selectedUser={
+      username: '',
+      email: '',
+      password: ''
+    };
+    form.resetForm();
+    this.serverErrorMessage='';
+  }*/
 }
