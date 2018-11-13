@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../../service/auth.service';
-import {NgForm} from "@angular/forms";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -16,13 +16,14 @@ export class RegisterComponent implements OnInit {
   email: String;
   password: String;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService,
+              private router:Router) {
   }
 
   ngOnInit() {
   }
 
-  registerData(form:NgForm) {
+  registerData() {
 
     const users = {
       username: this.username,
@@ -31,19 +32,19 @@ export class RegisterComponent implements OnInit {
 
 
     };
-    this.authService.registerUser(form.value).subscribe(
-      res=>{
-        console.log(res);
-        this.showSuccessMessage= true;
+    console.log(users);
+    this.authService.registerUser(users).subscribe(res=>{
+        this.showSuccessMessage = true;
         setTimeout(()=>this.showSuccessMessage=false,4000);
-       // this.resetForm(form);
+        this.router.navigate(['/login/signup']);
       },
       err=>{
-        if(err.status=402) {
+        /*if(err.status=409) {
           this.serverErrorMessage = err.error.join('<br/>');
         }else{
           this.serverErrorMessage = "something wrong ";
-        }
+          this.router.navigate(['/signup']);
+        }*/
       }
 
     );
