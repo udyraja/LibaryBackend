@@ -1,28 +1,23 @@
 const mongoose =require('mongoose');
 
-const Projects = require('../models/projects');
-const User =require('../models/users');
+const Author = require('../models/authors');
 
 
-exports.projects_get_all=(req,res,next) => {
-    Projects.find()
-        .select('user projectName Objectives ResourceMaterials TimeAllocation _id')
-        .populate('user','name')
+
+exports.authors_get_all=(req,res,next) => {
+    Author.find()
+        .select(' authorName _id')
         .exec()
         .then(docs => {
             res.status(200).json({
                 count : docs.length,
-                projects:docs.map(doc =>{
+                authors:docs.map(doc =>{
                     return {
                         _id:doc._id,
-                        user:doc.user,
-                        projectName:doc.projectName,
-                        Objectives:doc.Objectives,
-                        ResourceMaterials:doc.ResourceMaterials,
-                        TimeAllocation:doc.TimeAllocation,
+                        authorName:doc. authorName,
                         request: {
                             type: 'GET',
-                            url: 'http://localhost:3001/projects/' + doc._id
+                            url: 'http://localhost:3001/authors/' + doc._id
                         }
                     }
                 })
@@ -35,86 +30,78 @@ exports.projects_get_all=(req,res,next) => {
             });
         });
 };
-exports.projects_add_new =(req,res,next) => {
-    User.findById(req.body.userId)
-        .then(user =>{
-            if(!user){
-                return res.status(404).json({
-                    message:"User not Found"
-                });
-            }
-            const project=new Projects({
-                _id:new mongoose.Types.ObjectId(),
-                user:req.body.userId,
-                projectName:req.body.projectName,
-                Objectives:req.body.Objectives,
-                ResourceMaterials :req.body.ResourceMaterials,
-                TimeAllocation :req.body.TimeAllocation
-            });
-            return project
-                .save()
-        })
+
+exports.authors_add_new= (req,res,next) => {
+    const authors =new Author({
+        _id:new mongoose.Types.ObjectId(),
+        authorName:req.body.authorName
+
+    });
+    authors
+        .save()
         .then(result => {
             console.log(result);
             res.status(201).json({
-                message:'Project is Stored',
-                CreatedProject:{
+                message:'Created new Author',
+                createdAuthor: {
+                    authorName:result.authorName,
                     _id:result._id,
-                    user:result.user,
-                    projectName:result.projectName,
-                    Objectives:result.Objectives,
-                    ResourceMaterials:result.ResourceMaterials,
-                    TimeAllocation:result.TimeAllocation,
-                    request: {
-                        type: 'GET',
-                        url: 'http://localhost:3001/projects/' + result._id
+                    request:{
+                        type:'GET',
+                        url:"http://localhost:3001/authors/" + result._id
                     }
                 }
             });
         })
-        .catch(err =>{
+        .catch(err=> {
             console.log(err);
             res.status(500).json({
                 error:err
             });
-        });
-};
-exports.projects_get_projectById=(req,res,next) => {
-    Projects.findById(req.params.userId)
-        .populate('user')
-        .exec()
-        .then(docs => {
-            if(!user){
-                return res.status(404).json({
-                    message:"User not Found"
-                });
-            }
-            res.status(200).json({
-                projects:docs,
-                request: {
-                    type: 'GET',
-                    url: 'http://localhost:3001/projects/'
-                }
-            })
 
-        })
-        .catch(err =>{
-            res.status(500).json({
-                error:err
-            });
         });
+
 };
-exports.projects_delete=(req,res,next) => {
-    const id =req.params.projectId;
-    Projects.remove({_id:id})
+
+exports.authors_get_projectById=(req,res,next) => {
+    const id = req.params.authorId;
+    Author.findById(id)
+        .select('authorName _id')
+        .exec()
+        .then(doc=>{
+            console.log("From Database",doc);
+            if(doc){
+                res.status(200).json({
+                    user:doc,
+                    request: {
+                        type: 'GET',
+                        url: 'http://localhost:3001/authors'
+                    }
+                });
+
+            }else{
+                res.status((404).json({message:'no valid entry found'}));
+            }
+            res.status(200).json(doc);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({error : err});
+        });
+
+};
+
+exports.authors_delete=(req,res,next) => {
+    const id =req.params.authorId;
+    Author.remove({_id:id})
         .exec()
         .then(result =>{
             res.status(200).json({
-                message :'Project is deleted',
+                message :'Author is deleted',
                 request: {
                     type: 'POST',
-                    url: 'http://localhost:3001/projects',
-                    body:{userId:'ID', projectName:'String', Objectives:'String', ResourceMaterials:'String', TimeAllocation:'String'}
+                    url: 'http://localhost:3001/authors',
+                    body:{authorName :'String'}
                 }
             });
         })

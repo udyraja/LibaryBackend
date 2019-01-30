@@ -1,15 +1,15 @@
 const express= require ('express');
 const router = express.Router();
 
-const ProjectController = require('../controllers/projects');
+const AuthorController = require('../controllers/authors');
 
-router.get('/',ProjectController.projects_get_all);
+router.get('/',AuthorController.authors_get_all);
 
-router.post('/',ProjectController.projects_add_new);
+router.post('/',AuthorController.authors_add_new);
 
-router.get('/:projectId',ProjectController.projects_get_projectById);
+router.get('/:authorId',AuthorController.authors_get_projectById);
 
-router.delete('/:projectId',ProjectController.projects_delete);
+router.delete('/:authorId',AuthorController.authors_delete);
 
 module.exports =router;
 

@@ -1,22 +1,22 @@
 const express= require ('express');
 const router = express.Router();
 
-const CheackAuth =require('../middleware/check_auth');
+//const CheackAuth =require('../middleware/check_auth');
 
-const UserController = require('../controllers/users');
+const ArticleController = require('../controllers/articles');
 
 
-router.get('/',UserController.users_get_all);
+router.get('/',ArticleController.articles_get_all);
 
-router.post('/',CheackAuth,UserController.users_add_new);
+router.post('/',ArticleController.articles_add_new);
 //get the User ID
-router.get('/:userId',UserController.users_get_userId);
+router.get('/:articleId',ArticleController.articles_get_userId);
 
 //update User
-router.patch('/:userId',UserController.users_update);
+/*router.patch('/:articleId',ArticleController.articles_update);*/
 
 //delete user
-router.delete('/:userId',UserController.users_delete);
+router.delete('/:articleId',ArticleController.articles_delete);
 
 module.exports =router;
 

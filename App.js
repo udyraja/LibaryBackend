@@ -5,13 +5,10 @@ const app  = express();
 const cors = require('cors');
 const morgan = require('morgan');
 
-const userRoutes= require('./backend/routes/users');
-const projectRoutes= require('./backend/routes/projects');
-const loginRoutes= require('./backend/routes/login');
-const resourceRoutes= require('./backend/routes/resourceMaterials');
-const objectiveRoutes =require('./backend/routes/objectives');
+const articlesRoutes= require('./backend/routes/articles');
+const authorsRoutes= require('./backend/routes/authors');
 
-mongoose.connect('mongodb://localhost/ProjectManagementSERVER');
+mongoose.connect('mongodb://localhost/Test');
 mongoose.Promise = global.Promise;
 
 app.use(bodyparser.urlencoded({extended: false}));
@@ -31,11 +28,9 @@ app.use((req,res,next)=>{
     });
 
 
-app.use('/users',userRoutes);
-app.use('/projects',projectRoutes);
-app.use('/login',loginRoutes);
-app.use('/resources',resourceRoutes);
-app.use('/objectives',objectiveRoutes);
+app.use('/articles',articlesRoutes);
+app.use('/authors',authorsRoutes);
+
 
 app.use((req,res,next)=>{
     const error =new Error('Not Found');

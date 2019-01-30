@@ -1,34 +1,43 @@
-const Users = require('../models/users');
 const mongoose =require('mongoose');
 
-exports.users_get_all=(req,res,next) => {
-    Users.find()
-        .select('name email _id')
+const Author = require('../models/authors');
+const Article = require('../models/articles');
+
+
+exports.articles_get_all=(req,res,next) => {
+    Author.find()
+        .select('author title Url Content CreatedAt UpdatedAt _id')
+        .populate('author','authorName')
         .exec()
         .then(docs => {
             const response ={
                 count : docs.length,
-                users:docs.map(doc=>{
+                author:docs.map(doc=>{
                     return{
-                        name:doc.name,
-                        email:doc.email,
                         _id:doc._id,
+                        authorId:doc.authorId,
+                        author:doc.author,
+                        title:doc.title,
+                        Url:doc.Url,
+                        Content:doc.Content,
+                        CreatedAt:doc.CreatedAt,
+                        UpdatedAt:doc.UpdatedAt,
                         request:{
                             type:'GET',
-                            url:'http://localhost:3001/users/' + doc._id
+                            url:'http://localhost:3001/articles/' + doc._id
                         }
 
                     }
                 })
             };
-            res.status(200).json(response);
-            /*    if(docs.length >=0){
+          /*  res.status(200).json(response);
+            /!*    if(docs.length >=0){
                     res.status(200).json(docs);
                 }else{
                     res.status(404).json({
                         message:'no entry is found'
                     });
-                }*/
+                }*!/*/
         })
         .catch(err=>{
             console.log(err);
@@ -37,66 +46,82 @@ exports.users_get_all=(req,res,next) => {
             });
         });
 };
-exports.users_add_new= (req,res,next) => {
-    const users =new Users({
-        _id:new mongoose.Types.ObjectId(),
-        name:req.body.name,
-        email:req.body.email
-    });
-    users
-        .save()
+exports.articles_add_new =(req,res,next) => {
+    Author.findById(req.body.authorId)
+        .then(author =>{
+            if(!author){
+                return res.status(404).json({
+                    message:"Author not Found"
+                });
+            }
+            const article=new Article({
+                _id:new mongoose.Types.ObjectId(),
+                authorId:req.body.authorId,
+                author:req.body.author,
+                title:req.body.title,
+                Url:req.body.Url,
+                Content:req.body.Content,
+                CreatedAt:req.body.CreatedAt,
+                UpdatedAt:req.body.UpdatedAt,
+
+            });
+            return article
+                .save()
+        })
         .then(result => {
             console.log(result);
             res.status(201).json({
-                message:'Created new User',
-                createdUser: {
-                    name:result.name,
-                    email:result.email,
+                message:'Article is Stored',
+                CreatedArticle:{
                     _id:result._id,
-                    request:{
-                        type:'GET',
-                        url:"http://localhost:3001/users/" + result._id
+                    authorId:result.authorId,
+                    author:result.author,
+                    title:result.title,
+                    Url:result.Url,
+                    Content:result.Content,
+                    CreatedAt:result.CreatedAt,
+                    UpdatedAt:result.UpdatedAt,
+                    request: {
+                        type: 'GET',
+                        url: 'http://localhost:3001/articles/' + result._id
                     }
                 }
             });
         })
-        .catch(err=> {
+        .catch(err =>{
             console.log(err);
             res.status(500).json({
                 error:err
             });
-
         });
-
 };
-exports.users_get_userId =(req,res,next)=> {
-    const id = req.params.userId;
-    Users.findById(id)
-        .select('name email _id')
+exports.articles_get_userId =(req,res,next)=> {
+    Article.findById(req.params.authorId)
+        .populate('author')
         .exec()
-        .then(doc=>{
-            console.log("From Database",doc);
-            if(doc){
-                res.status(200).json({
-                    user:doc,
-                    request: {
-                        type: 'GET',
-                        url: 'http://localhost:3001/users'
-                    }
+        .then(docs => {
+            if(!author){
+                return res.status(404).json({
+                    message:"Author not Found"
                 });
-
-            }else{
-                res.status((404).json({message:'no valid entry found'}));
             }
-            res.status(200).json(doc);
+            res.status(200).json({
+                articles:docs,
+                request: {
+                    type: 'GET',
+                    url: 'http://localhost:3001/articles/'
+                }
+            })
+
         })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({error : err});
+        .catch(err =>{
+            res.status(500).json({
+                error:err
+            });
         });
 
 };
-exports.users_update=(req,res,next)=> {
+/*exports.articles_update=(req,res,next)=> {
     const id =req.params.userId;
     const updateOps ={};
     for (const ops of req.body){
@@ -118,18 +143,18 @@ exports.users_update=(req,res,next)=> {
             console.log(err);
             res.status(500).json({error : err});
         });
-};
-exports.users_delete=(req,res,next)=> {
-    const id =req.params.userId;
-    Users.remove({_id:id})
+};*/
+exports.articles_delete=(req,res,next)=> {
+    const id =req.params.authorId;
+    Article.remove({_id:id})
         .exec()
         .then(result =>{
             res.status(200).json({
-                message :'user is deleted',
+                message :'Article is deleted',
                 request: {
                     type: 'POST',
-                    url: 'http://localhost:3001/users',
-                    body:{name :'String' , email:'String'}
+                    url: 'http://localhost:3001/articles',
+                    body:{userId:'ID', projectName:'String', Objectives:'String', ResourceMaterials:'String', TimeAllocation:'String'}
                 }
             });
         })
