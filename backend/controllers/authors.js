@@ -6,7 +6,7 @@ const Author = require('../models/authors');
 
 exports.authors_get_all=(req,res,next) => {
     Author.find()
-        .select(' authorName _id')
+        .select('authorName _id')
         .exec()
         .then(docs => {
             res.status(200).json({

@@ -5,17 +5,24 @@ const router = express.Router();
 
 const ArticleController = require('../controllers/articles');
 
+//Get All Articles
 
 router.get('/',ArticleController.articles_get_all);
 
+//Add a new article
+
 router.post('/',ArticleController.articles_add_new);
-//get the User ID
-router.get('/:articleId',ArticleController.articles_get_userId);
 
-//update User
-/*router.patch('/:articleId',ArticleController.articles_update);*/
+//get the articles by article id
 
-//delete user
+router.get('/:articleId',ArticleController.articles_get_authorId);
+
+//update article
+
+router.patch('/:articleId',ArticleController.articles_update);
+
+//delete article
+
 router.delete('/:articleId',ArticleController.articles_delete);
 
 module.exports =router;

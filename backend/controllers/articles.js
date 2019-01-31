@@ -5,9 +5,9 @@ const Article = require('../models/articles');
 
 
 exports.articles_get_all=(req,res,next) => {
-    Author.find()
-        .select('author title Url Content CreatedAt UpdatedAt _id')
-        .populate('author','authorName')
+    Article.find()
+        .select('authorId author title Url Content CreatedAt UpdatedAt _id')
+        .populate('authorId','name')
         .exec()
         .then(docs => {
             const response ={
@@ -75,7 +75,7 @@ exports.articles_add_new =(req,res,next) => {
                 CreatedArticle:{
                     _id:result._id,
                     authorId:result.authorId,
-                    author:result.author,
+                  //  author:result.author,
                     title:result.title,
                     Url:result.Url,
                     Content:result.Content,
@@ -95,7 +95,7 @@ exports.articles_add_new =(req,res,next) => {
             });
         });
 };
-exports.articles_get_userId =(req,res,next)=> {
+exports.articles_get_authorId =(req,res,next)=> {
     Article.findById(req.params.authorId)
         .populate('author')
         .exec()
@@ -121,8 +121,8 @@ exports.articles_get_userId =(req,res,next)=> {
         });
 
 };
-/*exports.articles_update=(req,res,next)=> {
-    const id =req.params.userId;
+exports.articles_update=(req,res,next)=> {
+    const id =req.params.articleId;
     const updateOps ={};
     for (const ops of req.body){
         updateOps[ops.prpName]=ops.value;
@@ -135,7 +135,7 @@ exports.articles_get_userId =(req,res,next)=> {
                 message :'user is updated',
                 request: {
                     type: 'GET',
-                    url: 'http://localhost:3001/users/' + id
+                    url: 'http://localhost:3001/articles/' + id
                 }
             });
         })
@@ -143,9 +143,9 @@ exports.articles_get_userId =(req,res,next)=> {
             console.log(err);
             res.status(500).json({error : err});
         });
-};*/
+};
 exports.articles_delete=(req,res,next)=> {
-    const id =req.params.authorId;
+    const id =req.params.articleId;
     Article.remove({_id:id})
         .exec()
         .then(result =>{
@@ -153,8 +153,7 @@ exports.articles_delete=(req,res,next)=> {
                 message :'Article is deleted',
                 request: {
                     type: 'POST',
-                    url: 'http://localhost:3001/articles',
-                    body:{userId:'ID', projectName:'String', Objectives:'String', ResourceMaterials:'String', TimeAllocation:'String'}
+                    url: 'http://localhost:3001/articles'
                 }
             });
         })

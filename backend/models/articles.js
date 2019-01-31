@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const  articleSchema = mongoose.Schema({
     _id:mongoose.Schema.Types.ObjectId,
     authorId:{type:mongoose.Schema.Types.ObjectId,ref:'Author',required:true},
-    author:{type: String, required: true},
+   author:{type: String, required: true},
     title: {type: String, required: true},
     Url: {type: String, required: true},
     Content: {type: String, required: true},
